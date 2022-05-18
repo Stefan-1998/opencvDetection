@@ -7,9 +7,15 @@ class VideoStream
 {
     public:
         VideoStream ();
+        ~VideoStream ();
         Mat getImage();
+
+        //to cancel press q
+        void showVideoSteam(std::string windowName);
+
     private:
-        VideoCapture capture;
+         VideoCapture captureObject;
+         
 
 };
 
