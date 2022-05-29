@@ -56,31 +56,43 @@ int main()
 
 
     char lastPressedKey='1';
+    int frameNumber=0;
 
     bool loop=true;
     while(loop)
     {
         Mat picture=vid->getImage();
         
-        //Switch between the detections
-        switch(lastPressedKey)
+        if(frameNumber>5)
         {
-            case '2': personDetector->detect(&picture,&detections);break; 
-            case '3': faceDetector->detect(&picture,&detections);break; 
-            case '4': eyeDetector->detect(&picture,&detections);break; 
-            defauld: break;
+            //delete detections after being drawn
+            detections.clear();
+
+            //Switch between the detections
+            switch(lastPressedKey)
+            {
+                case '2': personDetector->detect(&picture,&detections);break; 
+                case '3': faceDetector->detect(&picture,&detections);break; 
+                case '4': eyeDetector->detect(&picture,&detections);break; 
+                defauld: break;
+            }
+             
+
+
+            frameNumber=0;
         }
-         
+        else
+        {
+            frameNumber++;
+        }
+
         //goes through all Rectangles
         for(cv::Rect box : detections)
         {
             //draw squares in picture
             cv::rectangle(picture, box.tl(), box.br(), cv::Scalar(255, 0, 0), 2);
         }
-
-        //delete detections after being drawn
-        detections.clear();
-
+        
         // Display picture
         cv::namedWindow("Picture");
         cv::imshow("Picture", picture);
