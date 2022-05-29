@@ -1,3 +1,4 @@
+#include <memory>
 #include <opencv2/highgui.hpp>
 #include <stdio.h>
 #include <iostream>
@@ -7,30 +8,47 @@
 #include "../lib/videoStream.hpp"
 #include "../lib/personDetection.hpp"
 #include "../lib/faceDetection.hpp"
+#include "../lib/eyeDetection.hpp"
+#include "memory"
 
 using namespace cv;
 
 int main()
 {
+    /*
+        For the detection, are .xml Files used, which come with
+        the opencv repo undar data haarcascades. To load those file
+        a relativ path is needed. Also the results aren't that good
+        yet. With those files other detections are possible.
+        Just check which .xml files are availible
+        
+        */
+
     //Create Videostream
-    VideoStream *vid;
-    personDetection *personDetector;
-    faceDetection *faceDetector;
+    std::unique_ptr<VideoStream> vid;
+    std::unique_ptr<IDetector>personDetector;
+    std::unique_ptr<IDetector>faceDetector;
+    std::unique_ptr<IDetector>eyeDetector;
+
     try{
-        vid= new VideoStream();
-        personDetector= new personDetection();
-        faceDetector= new faceDetection();
+        vid= std::make_unique<VideoStream>();
+        personDetector=std::make_unique<personDetection>();
+        faceDetector=std::make_unique<faceDetection>();
+        eyeDetector=std::make_unique<eyeDetection>();
     }
     catch(std::string e) {
         //if Videostream isn't created quit the application
+        //or if one detector is not there
         std::cout <<e<<std::endl; 
         return -1;
     }
-    
+
+    //Display Options
     std::cout<<"Options\n";
     std::cout<<"VideoStream:"<<"\t\t"<<"1"<<'\n';
     std::cout<<"Persondetection:"<<"\t"<<"2"<<'\n';
-    std::cout<<"Facedetection:"<<"\t"<<"3"<<'\n';
+    std::cout<<"Facedetection:"<<"\t\t"<<"3"<<'\n';
+    std::cout<<"Eyedetection:"<<"\t\t"<<"4"<<'\n';
     std::cout<<"Quit:"<<"\t\t\t"<<"q";
     std::cout<<std::endl;
     
@@ -44,10 +62,13 @@ int main()
     {
         Mat picture=vid->getImage();
         
+        //Switch between the detections
         switch(lastPressedKey)
         {
             case '2': personDetector->detect(&picture,&detections);break; 
             case '3': faceDetector->detect(&picture,&detections);break; 
+            case '4': eyeDetector->detect(&picture,&detections);break; 
+            defauld: break;
         }
          
         //goes through all Rectangles
@@ -81,10 +102,5 @@ int main()
 
     //destroy all objects
     destroyAllWindows();
-    delete personDetector;
-    delete faceDetector;
-    delete vid;
-
-
     return 0;
 }

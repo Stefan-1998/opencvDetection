@@ -1,8 +1,8 @@
-#include "../lib/faceDetection.hpp"
+#include "../lib/eyeDetection.hpp"
 
 
 
-faceDetection::faceDetection()
+eyeDetection::eyeDetection()
 {
         
     if(!faceDetector.load(defaultXmlPath))
@@ -12,7 +12,7 @@ faceDetection::faceDetection()
     }
     
 }
-faceDetection::faceDetection(std::string xmlPath)
+eyeDetection::eyeDetection(std::string xmlPath)
 {
     if(!faceDetector.load(xmlPath))
     {
@@ -20,11 +20,11 @@ faceDetection::faceDetection(std::string xmlPath)
         throw message;
     }
 }
-faceDetection::~faceDetection()
+eyeDetection::~eyeDetection()
 {
 
 }
-void faceDetection::detectFace(cv::Mat *picture,std::vector<cv::Rect>*detections)
+void eyeDetection::detectEyes(cv::Mat *picture,std::vector<cv::Rect>*detections)
 {
     cv::Mat grayPicture;
     cv::cvtColor(*picture, grayPicture, cv::COLOR_BGR2GRAY );
