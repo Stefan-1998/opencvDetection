@@ -12,7 +12,6 @@ class personDetection:public IDetector
 {
     public:
         personDetection();
-        personDetection(int i);
 
         ~personDetection();
         void detect(cv::Mat *picture,std::vector<cv::Rect>*detections) 

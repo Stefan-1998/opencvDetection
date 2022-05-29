@@ -6,6 +6,7 @@
 #include <opencv2/core.hpp>
 #include "../lib/videoStream.hpp"
 #include "../lib/personDetection.hpp"
+#include "../lib/faceDetection.hpp"
 
 using namespace cv;
 
@@ -13,8 +14,12 @@ int main()
 {
     //Create Videostream
     VideoStream *vid;
+    personDetection *personDetector;
+    faceDetection *faceDetector;
     try{
-     vid= new VideoStream();
+        vid= new VideoStream();
+        personDetector= new personDetection();
+        faceDetector= new faceDetection();
     }
     catch(std::string e) {
         //if Videostream isn't created quit the application
@@ -25,12 +30,12 @@ int main()
     std::cout<<"Options\n";
     std::cout<<"VideoStream:"<<"\t\t"<<"1"<<'\n';
     std::cout<<"Persondetection:"<<"\t"<<"2"<<'\n';
+    std::cout<<"Facedetection:"<<"\t"<<"3"<<'\n';
     std::cout<<"Quit:"<<"\t\t\t"<<"q";
     std::cout<<std::endl;
     
 	std::vector<cv::Rect> detections;
 
-    personDetection *detector= new personDetection();
 
     char lastPressedKey='1';
 
@@ -39,9 +44,10 @@ int main()
     {
         Mat picture=vid->getImage();
         
-        if(lastPressedKey=='2')
+        switch(lastPressedKey)
         {
-            detector->detect(&picture,&detections);
+            case '2': personDetector->detect(&picture,&detections);break; 
+            case '3': faceDetector->detect(&picture,&detections);break; 
         }
          
         //goes through all Rectangles
@@ -58,7 +64,6 @@ int main()
         cv::namedWindow("Picture");
         cv::imshow("Picture", picture);
         
-        //apperently 1048689 is equal to q 
         //so q should quit the application
         int pressedKey=cv::pollKey();
         if(pressedKey!=-1)
@@ -76,7 +81,8 @@ int main()
 
     //destroy all objects
     destroyAllWindows();
-    delete detector;
+    delete personDetector;
+    delete faceDetector;
     delete vid;
 
 

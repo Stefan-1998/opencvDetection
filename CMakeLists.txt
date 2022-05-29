@@ -17,11 +17,13 @@ add_library(src_cpp
 set(NAME_SRC
     src/personDetection.cpp
     src/videoStream.cpp
+    src/faceDetection.cpp
     )
 set(NAME_HEADERS
     lib/IDetector.hpp
     lib/personDetection.hpp
     lib/videoStream.hpp
+    lib/faceDetection.hpp
     )
 #INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/lib)
 #INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/src)
