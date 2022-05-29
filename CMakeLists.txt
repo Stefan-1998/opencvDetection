@@ -1,46 +1,37 @@
-#cmake_minimum_required(VERSION 3.10 )
-
-#project(personRecognition CXX)
-
-#set(CMAKE_CXX_STANDARd 14)
+#MAL PROBIEREN, OB ICH FÜR OPENCV, DIE LIBRARIES IDENTISCH, WIE BEI 
+#SFML HINZUFÜGEN KANN
 
 
-#            include_directories(lib)
-#            add_subdirectory(src)
-#            find_package(OpenCV 4.2 REQUIRED)
-#
-#            add_executable(personRecognition main/main.cpp)
-#
-#            target_link_libraries(personRecognition PUBLIC 
-#
-#                #"${PROJECT_SOURCE_DIR}/lib"
-#                #"${PROJECT_SOURCE_DIR}/src"
-#                ${OpenCV_LIBS}
-#                #${OpenCV_INCLUDE_DIRS}
-#
-#                src
-                
-#            )
-#
-#            target_include_directories(personRecognition PUBLIC 
-#                    "${PROJECT_BINARY_DIR}"
-#                    "${PROJECT_SOURCE_DIR}"
-#
-#                    lib
-#                    #${OpenCV_LIBS}
-#                    #${OpenCV_INCLUDE_DIRS}
-#                )
+
 cmake_minimum_required(VERSION 2.8)
-PROJECT(personRecognition)
-find_package(OpenCV 4.2 REQUIRED)
-set(NAME_SRC
-    src/videoStream.cpp)
-set(NAME_HEADERS
-    lib/videoStream.hpp)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/lib)
-link_directories( ${CMAKE_BINARY_DIR}/bin)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-#add_executable(personRecognition ${NAME_SRC} ${NAME_HEADERS} )
-add_executable(personRecognition main/main.cpp ${NAME_SRC} ${NAME_HEADERS} )
+project(personRecognition)
 
-target_link_libraries( personRecognition ${OpenCV_LIBS} )
+find_package(OpenCV 4.2 REQUIRED)
+
+
+include_directories(lib)
+add_library(src_cpp
+    src/personDetection.cpp
+    src/videoStream.cpp
+    )
+set(NAME_SRC
+    src/personDetection.cpp
+    src/videoStream.cpp
+    )
+set(NAME_HEADERS
+    lib/IDetector.hpp
+    lib/personDetection.hpp
+    lib/videoStream.hpp
+    )
+#INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/lib)
+#INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/src)
+#link_directories( ${CMAKE_BINARY_DIR}/bin)
+#link_directories( ${CMAKE_BINARY_DIR}/src)
+
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+
+
+add_executable(personRecognition main/main.cpp  ${NAME_HEADERS} ${NAME_SRC} )
+
+target_link_libraries( personRecognition ${OpenCV_LIBS} src_cpp )
+
