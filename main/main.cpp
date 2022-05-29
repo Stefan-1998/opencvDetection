@@ -22,17 +22,27 @@ int main()
         return -1;
     }
     
+    std::cout<<"Options\n";
+    std::cout<<"VideoStream:"<<"\t\t"<<"1"<<'\n';
+    std::cout<<"Persondetection:"<<"\t"<<"2"<<'\n';
+    std::cout<<"Quit:"<<"\t\t\t"<<"q";
+    std::cout<<std::endl;
     
 	std::vector<cv::Rect> detections;
 
     personDetection *detector= new personDetection();
+
+    char lastPressedKey='1';
 
     bool loop=true;
     while(loop)
     {
         Mat picture=vid->getImage();
         
-        detector->detect(&picture,&detections);
+        if(lastPressedKey=='2')
+        {
+            detector->detect(&picture,&detections);
+        }
          
         //goes through all Rectangles
         for(cv::Rect box : detections)
@@ -50,12 +60,17 @@ int main()
         
         //apperently 1048689 is equal to q 
         //so q should quit the application
-        char pressedKey=cv::pollKey();
-        if(pressedKey=='q')
+        int pressedKey=cv::pollKey();
+        if(pressedKey!=-1)
+        {
+            lastPressedKey=(char)pressedKey;
+        }
+        if(lastPressedKey=='q')
         { 
             //quit loop
             loop=false;
         }
+        
         
     }
 
